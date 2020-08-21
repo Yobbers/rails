@@ -58,9 +58,21 @@ module Rails
     def run_initializers(group = :default, *args)
       return if instance_variable_defined?(:@ran)
       initializers.tsort_each do |initializer|
+        next if initializer.name == :set_routes_reloader_hook && is_asset_task?
+
         initializer.run(*args) if initializer.belongs_to?(group)
       end
       @ran = true
+    end
+
+    def running_tasks
+      @running_tasks ||= begin
+        Rake.try(:application).present? && Rake.application&.top_level_tasks || []
+      end
+    end
+
+    def is_asset_task?
+      running_tasks.any? { |task| %w(assets:precompile assets:clean).include?(task) }
     end
 
     def initializers
