@@ -66,7 +66,9 @@ module Rails
     end
 
     def running_tasks
-      @running_tasks ||= Rake.application&.top_level_tasks
+      @running_tasks ||= begin
+        Rake.try(:application).present? && Rake.application&.top_level_tasks || []
+      end
     end
 
     def is_asset_task?
