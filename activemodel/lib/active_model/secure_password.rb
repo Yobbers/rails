@@ -100,6 +100,8 @@ module ActiveModel
             cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
             self.send("#{attribute}_digest_legacy=", BCrypt::Password.create(unencrypted_password, cost: cost))
           end
+
+          super
         end
 
         define_method("#{attribute}_confirmation=") do |unencrypted_password|
