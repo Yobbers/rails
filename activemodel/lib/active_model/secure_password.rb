@@ -101,7 +101,7 @@ module ActiveModel
             self.send("#{attribute}_digest_legacy=", BCrypt::Password.create(unencrypted_password, cost: cost))
           end
 
-          super
+          super(unencrypted_password)
         end
 
         define_method("#{attribute}_confirmation=") do |unencrypted_password|
